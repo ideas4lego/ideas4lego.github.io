@@ -4,7 +4,7 @@ backend:
   branch: main
   # Адрес твоего OAuth-прокси (см. README -> "Настройка входа").
   # Пока не настроено — вход работать не будет.
-  base_url: https://ЗАМЕНИ-НА-СВОЙ-OAUTH-PROXY.example.com
+  base_url: base_url: https://ideas4lego-cms-oauth.ideas4lego.workers.dev
   auth_endpoint: auth
 
 # Показывать превью сайта прямо в CMS
