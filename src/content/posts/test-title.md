@@ -1,7 +1,6 @@
 ---
 title: Тест заголовка
 date: 2026-07-03
-image: ""
 excerpt: Тест краткого описания
 draft: false
 ---
