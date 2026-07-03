@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const posts = allPosts.sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+<BaseLayout title="Главная">
+  <h1>Добро пожаловать!</h1>
+  <p>Здесь будут появляться новые записи.</p>
+
+  <ul class="post-list">
+    {posts.map((post) => (
+      <li>
+        <a href={`/posts/${post.id}/`}>{post.data.title}</a><br />
+        <time datetime={post.data.date.toISOString()}>
+          {post.data.date.toLocaleDateString('ru-RU')}
+        </time>
+        {post.data.excerpt && <p>{post.data.excerpt}</p>}
+      </li>
+    ))}
+  </ul>
+
+  {posts.length === 0 && <p>Пока нет ни одной записи.</p>}
+</BaseLayout>
