@@ -1,0 +1,126 @@
+/* =========================================================
+   Глобальные стили сайта.
+   Это основное место для правки внешнего вида (профессионал).
+   Ребёнок сюда не заходит — он работает только через /admin.
+   ========================================================= */
+
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-muted: #6b6b6b;
+  --color-accent: #2b6cb0;
+  --color-border: #e5e5e5;
+
+  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: var(--font-body);
+
+  --max-width: 720px;
+  --spacing: 1.5rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+  font-size: 18px;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing);
+}
+
+header.site-header {
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--spacing) 0;
+  margin-bottom: var(--spacing);
+}
+
+.site-header nav {
+  display: flex;
+  gap: 1.5rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.site-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.site-header a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.site-header a:hover {
+  color: var(--color-accent);
+}
+
+main {
+  padding-bottom: 4rem;
+  min-height: 60vh;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+}
+
+a {
+  color: var(--color-accent);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.post-list {
+  list-style: none;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.post-list time {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.post-list a {
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.post-list a:hover {
+  color: var(--color-accent);
+}
+
+footer.site-footer {
+  border-top: 1px solid var(--color-border);
+  margin-top: 3rem;
+  padding: var(--spacing) 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}

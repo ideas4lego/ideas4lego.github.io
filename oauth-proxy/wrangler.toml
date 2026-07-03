@@ -1,0 +1,7 @@
+name = "ideas4lego-cms-oauth"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+# Секреты (не хранить в этом файле!):
+#   wrangler secret put GITHUB_CLIENT_ID
+#   wrangler secret put GITHUB_CLIENT_SECRET
