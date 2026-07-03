@@ -1,0 +1,50 @@
+backend:
+  name: github
+  repo: ideas4lego/ideas4lego.github.io
+  branch: main
+  # Адрес твоего OAuth-прокси (см. README -> "Настройка входа").
+  # Пока не настроено — вход работать не будет.
+  base_url: https://ЗАМЕНИ-НА-СВОЙ-OAUTH-PROXY.example.com
+  auth_endpoint: auth
+
+# Показывать превью сайта прямо в CMS
+site_url: https://ideas4lego.github.io
+display_url: https://ideas4lego.github.io
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+# Локализация интерфейса CMS на русский
+locale: "ru"
+
+collections:
+  - name: "posts"
+    label: "Посты"
+    label_singular: "Пост"
+    folder: "src/content/posts"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} — {{date}}"
+    sortable_fields: ["date", "title"]
+    fields:
+      - { label: "Заголовок", name: "title", widget: "string" }
+      - { label: "Дата", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Картинка", name: "image", widget: "image", required: false }
+      - { label: "Описание картинки", name: "imageAlt", widget: "string", required: false }
+      - { label: "Краткое описание", name: "excerpt", widget: "text", required: false }
+      - { label: "Текст поста", name: "body", widget: "markdown" }
+      - { label: "Черновик (не публиковать)", name: "draft", widget: "boolean", default: false }
+
+  - name: "pages"
+    label: "Страницы"
+    label_singular: "Страница"
+    folder: "src/content/pages"
+    create: false
+    delete: false
+    slug: "{{slug}}"
+    fields:
+      - { label: "Заголовок", name: "title", widget: "string" }
+      - { label: "Картинка", name: "image", widget: "image", required: false }
+      - { label: "Текст", name: "body", widget: "markdown" }

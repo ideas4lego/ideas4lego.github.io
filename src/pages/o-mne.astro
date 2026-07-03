@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getEntry, render } from 'astro:content';
+
+const page = await getEntry('pages', 'o-mne');
+const { Content } = await render(page);
+---
+<BaseLayout title={page.data.title}>
+  <h1>{page.data.title}</h1>
+  {page.data.image && <img src={page.data.image} alt="" />}
+  <Content />
+</BaseLayout>
