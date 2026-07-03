@@ -1,7 +1,7 @@
 ---
 title: Мой первый пост
 date: 2026-07-03
-image: ""
+image: https://www.sostav.ru/blogs/images/feeds/103/204545.jpg
 excerpt: Это пример записи. Его можно отредактировать или удалить в /admin.
 draft: false
 ---
