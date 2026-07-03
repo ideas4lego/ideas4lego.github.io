@@ -7,7 +7,6 @@ backend:
   base_url: https://ideas4lego-cms-oauth.ideas4lego.workers.dev
   auth_endpoint: auth
 
-# Транслитерация кириллицы в имена файлов (slug)
 slug:
   encoding: "ascii"
   clean_accents: true
