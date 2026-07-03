@@ -7,6 +7,11 @@ backend:
   base_url: https://ideas4lego-cms-oauth.ideas4lego.workers.dev
   auth_endpoint: auth
 
+# Транслитерация кириллицы в имена файлов (slug)
+slug:
+  encoding: "ascii"
+  clean_accents: true
+
 # Показывать превью сайта прямо в CMS
 site_url: https://ideas4lego.github.io
 display_url: https://ideas4lego.github.io
@@ -24,7 +29,7 @@ collections:
     folder: "src/content/posts"
     create: true
     delete: true
-    slug: "{{slug}}"
+    slug: "{{slug}}-{{year}}-{{month}}-{{day}}"
     identifier_field: title
     summary: "{{title}} — {{date}}"
     sortable_fields: ["date", "title"]
