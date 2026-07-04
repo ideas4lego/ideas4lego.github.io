@@ -71,15 +71,15 @@ collections:
     fields:
       - { label: "Название видео", name: "title", widget: "string" }
       - { label: "Дата", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
-      - label: "Ссылка на YouTube"
+      - label: "Ссылка на видео (YouTube или RuTube)"
         name: "youtubeUrl"
         widget: "string"
-        hint: "Например https://www.youtube.com/watch?v=XXXXXXXXXXX"
+        hint: "Вставь ссылку с YouTube или с RuTube, например https://www.youtube.com/watch?v=XXXXXXXXXXX или https://rutube.ru/video/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/"
       - label: "Своя картинка-превью (необязательно)"
         name: "thumbnail"
         widget: "image"
         required: false
-        hint: "Если не загрузить — возьмётся превью с самого YouTube"
+        hint: "Если не загрузить — для YouTube превью подставится само; для RuTube лучше загрузить своё"
       - { label: "Длительность", name: "duration", widget: "string", required: false, hint: "Например 08:12" }
       - { label: "Просмотры (текстом)", name: "views", widget: "string", required: false, hint: "Например «24 тыс. просмотров»" }
       - { label: "Краткое описание (для карточки)", name: "excerpt", widget: "text", required: false }
