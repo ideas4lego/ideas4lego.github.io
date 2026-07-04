@@ -1,7 +1,7 @@
 ---
 title: Мой первый пост
 date: 2026-07-03
-image: ""
+image: /uploads/skype_picture_2024_05_31t08_17_00_102z.jpeg
 excerpt: Это пример записи. Его можно отредактировать или удалить в /admin.
 draft: false
 ---
