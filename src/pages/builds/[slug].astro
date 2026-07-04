@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { accentPalette } from '../../lib/accentColors';
+
+export async function getStaticPaths() {
+  const builds = await getCollection('builds', ({ data }) => !data.draft);
+  return builds.map((build) => ({
+    params: { slug: build.id },
+    props: { build },
+  }));
+}
+
+const { build } = Astro.props;
+const { Content } = await render(build);
+const palette = accentPalette[build.data.accentColor];
+---
+<BaseLayout title={build.data.title}>
+  <section>
+    <div class="wrap" style="max-width:820px;">
+      <p><a href="/#builds">&larr; Все постройки</a></p>
+
+      <div class="brick-thumb" style={`--c1:${palette.c1}; --c2:${palette.c2}; aspect-ratio:16/9; border-radius:var(--radius); margin-bottom:28px;`}>
+        {build.data.image && (
+          <img src={build.data.image} alt={build.data.imageAlt || build.data.title} />
+        )}
+        {build.data.pieceCount && (
+          <span class="piece-count">{build.data.pieceCount} деталей</span>
+        )}
+      </div>
+
+      <h1>{build.data.title}</h1>
+      <div class="meta-row" style="margin-bottom:24px;">
+        {build.data.timeMinutes && <span>⏱ {build.data.timeMinutes} мин</span>}
+        <span>⭐ {build.data.difficulty}</span>
+        <span>{build.data.date.toLocaleDateString('ru-RU')}</span>
+      </div>
+
+      <article>
+        <Content />
+      </article>
+    </div>
+  </section>
+</BaseLayout>

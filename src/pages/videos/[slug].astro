@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { getYouTubeEmbedUrl } from '../../lib/youtube';
+
+export async function getStaticPaths() {
+  const videos = await getCollection('videos', ({ data }) => !data.draft);
+  return videos.map((video) => ({
+    params: { slug: video.id },
+    props: { video },
+  }));
+}
+
+const { video } = Astro.props;
+const { Content } = await render(video);
+const embedUrl = getYouTubeEmbedUrl(video.data.youtubeUrl);
+---
+<BaseLayout title={video.data.title}>
+  <section>
+    <div class="wrap" style="max-width:820px;">
+      <p><a href="/#videos">&larr; Все видео</a></p>
+
+      {embedUrl ? (
+        <div class="video-wrap">
+          <iframe
+            src={embedUrl}
+            title={video.data.title}
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      ) : (
+        <p>
+          <a href={video.data.youtubeUrl} target="_blank" rel="noopener noreferrer">
+            Смотреть видео
+          </a>
+        </p>
+      )}
+
+      <h1>{video.data.title}</h1>
+      <div class="meta-row" style="margin-bottom:24px;">
+        {video.data.duration && <span>⏱ {video.data.duration}</span>}
+        {video.data.views && <span>{video.data.views}</span>}
+        <span>{video.data.date.toLocaleDateString('ru-RU')}</span>
+      </div>
+
+      <article>
+        <Content />
+      </article>
+    </div>
+  </section>
+</BaseLayout>

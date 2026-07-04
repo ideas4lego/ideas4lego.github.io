@@ -22,10 +22,10 @@ public_folder: "/uploads"
 locale: "ru"
 
 collections:
-  - name: "posts"
-    label: "Посты"
-    label_singular: "Пост"
-    folder: "src/content/posts"
+  - name: "builds"
+    label: "Постройки"
+    label_singular: "Постройка"
+    folder: "src/content/builds"
     create: true
     delete: true
     slug: "{{slug}}"
@@ -33,18 +33,82 @@ collections:
     summary: "{{title}} — {{date}}"
     sortable_fields: ["date", "title"]
     fields:
-      - { label: "Заголовок", name: "title", widget: "string" }
+      - { label: "Название постройки", name: "title", widget: "string" }
       - { label: "Дата", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
-      - { label: "Картинка", name: "image", widget: "image", required: false }
-      - { label: "Описание картинки", name: "imageAlt", widget: "string", required: false }
-      - { label: "Краткое описание", name: "excerpt", widget: "text", required: false }
-      - label: "Видео (ссылка на YouTube)"
-        name: "video"
-        widget: "string"
-        required: false
-        hint: "Вставь ссылку на YouTube-видео, например https://www.youtube.com/watch?v=XXXXXXXXXXX"
-      - { label: "Текст поста", name: "body", widget: "markdown" }
+      - { label: "Фото", name: "image", widget: "image", required: false }
+      - { label: "Описание фото", name: "imageAlt", widget: "string", required: false }
+      - { label: "Краткое описание (для карточки)", name: "excerpt", widget: "text", required: false }
+      - { label: "Количество деталей", name: "pieceCount", widget: "number", required: false, value_type: "int" }
+      - { label: "Время сборки (минут)", name: "timeMinutes", widget: "number", required: false, value_type: "int" }
+      - label: "Сложность"
+        name: "difficulty"
+        widget: "select"
+        default: "Легко"
+        options: ["Легко", "Средне", "Сложно"]
+      - label: "Цвет карточки"
+        name: "accentColor"
+        widget: "select"
+        default: "brick"
+        options:
+          - { label: "Красный", value: "brick" }
+          - { label: "Голубой", value: "sky" }
+          - { label: "Зелёный", value: "grass" }
+          - { label: "Жёлтый", value: "sun" }
+          - { label: "Фиолетовый", value: "grape" }
+      - { label: "Подробный рассказ о постройке", name: "body", widget: "markdown" }
       - { label: "Черновик (не публиковать)", name: "draft", widget: "boolean", default: false }
+
+  - name: "videos"
+    label: "Видео"
+    label_singular: "Видео"
+    folder: "src/content/videos"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} — {{date}}"
+    sortable_fields: ["date", "title"]
+    fields:
+      - { label: "Название видео", name: "title", widget: "string" }
+      - { label: "Дата", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - label: "Ссылка на YouTube"
+        name: "youtubeUrl"
+        widget: "string"
+        hint: "Например https://www.youtube.com/watch?v=XXXXXXXXXXX"
+      - label: "Своя картинка-превью (необязательно)"
+        name: "thumbnail"
+        widget: "image"
+        required: false
+        hint: "Если не загрузить — возьмётся превью с самого YouTube"
+      - { label: "Длительность", name: "duration", widget: "string", required: false, hint: "Например 08:12" }
+      - { label: "Просмотры (текстом)", name: "views", widget: "string", required: false, hint: "Например «24 тыс. просмотров»" }
+      - { label: "Краткое описание (для карточки)", name: "excerpt", widget: "text", required: false }
+      - label: "Цвет карточки"
+        name: "accentColor"
+        widget: "select"
+        default: "sun"
+        options:
+          - { label: "Красный", value: "brick" }
+          - { label: "Голубой", value: "sky" }
+          - { label: "Зелёный", value: "grass" }
+          - { label: "Жёлтый", value: "sun" }
+          - { label: "Фиолетовый", value: "grape" }
+      - { label: "Описание на странице видео", name: "body", widget: "markdown", required: false }
+      - { label: "Черновик (не публиковать)", name: "draft", widget: "boolean", default: false }
+
+  - name: "gallery"
+    label: "Фотогалерея"
+    label_singular: "Фото"
+    folder: "src/content/gallery"
+    create: true
+    delete: true
+    slug: "photo-{{year}}{{month}}{{day}}{{hour}}{{minute}}{{second}}"
+    identifier_field: tag
+    summary: "{{tag}}"
+    fields:
+      - { label: "Фото", name: "image", widget: "image" }
+      - { label: "Подпись", name: "tag", widget: "string" }
+      - { label: "Дата", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
 
   - name: "pages"
     label: "Страницы"

@@ -1,27 +1,245 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { accentPalette } from '../lib/accentColors';
+import { getYouTubeThumbnail } from '../lib/youtube';
 
-const allPosts = await getCollection('posts', ({ data }) => !data.draft);
-const posts = allPosts.sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+const allBuilds = (await getCollection('builds', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const featuredBuilds = allBuilds.slice(0, 3);
+
+const allVideos = (await getCollection('videos', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const featuredVideos = allVideos.slice(0, 3);
+const latestVideo = allVideos[0];
+
+const galleryItems = (await getCollection('gallery'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 12);
 ---
 <BaseLayout title="Главная">
-  <h1>Добро пожаловать!</h1>
-  <p>Здесь будут появляться новые записи.</p>
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Видеоблог для юных инженеров</div>
+        <h1>Строим из лего<br>то, чего ещё<br><span class="accent">никто не видел</span></h1>
+        <p class="lead">Привет! Меня зовут Тёма, мне 9 лет. Здесь я показываю свои постройки из лего: от космических кораблей до говорящих роботов — с видео, фото и инструкциями, чтобы повторить было легко.</p>
+        <div class="hero-actions">
+          <a href="/#videos" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+            Смотреть видео
+          </a>
+          <a href="/#builds" class="btn btn-ghost">Идеи для поделок</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><b>{allBuilds.length}</b><span>построек показано</span></div>
+          <div class="hero-stat"><b>{allVideos.length}</b><span>видео на канале</span></div>
+          <div class="hero-stat"><b>6–12</b><span>лет — для кого это</span></div>
+        </div>
+      </div>
 
-  <ul class="post-list">
-    {posts.map((post) => (
-      <li>
-        <a href={`/posts/${post.id}/`}>{post.data.title}</a><br />
-        <time datetime={post.data.date.toISOString()}>
-          {post.data.date.toLocaleDateString('ru-RU')}
-        </time>
-        {post.data.excerpt && <p>{post.data.excerpt}</p>}
-      </li>
-    ))}
-  </ul>
+      <div class="video-frame">
+        {latestVideo ? (
+          <a href={`/videos/${latestVideo.id}/`} style="text-decoration:none; color:inherit;">
+            <div class="video-inner">
+              <button class="play-btn" aria-label="Смотреть видео">
+                <svg viewBox="0 0 24 24" fill="#E13438"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+            </div>
+            <div class="video-caption">
+              <span>Новое видео: {latestVideo.data.title}</span>
+              {latestVideo.data.duration && <span class="badge">{latestVideo.data.duration}</span>}
+            </div>
+          </a>
+        ) : (
+          <div>
+            <div class="video-inner">
+              <button class="play-btn" aria-label="Скоро будет видео">
+                <svg viewBox="0 0 24 24" fill="#E13438"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+            </div>
+            <div class="video-caption">
+              <span>Скоро здесь появится первое видео</span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
 
-  {posts.length === 0 && <p>Пока нет ни одной записи.</p>}
+  <div class="stud-row multi" role="presentation"></div>
+
+  <!-- ============ FEATURED BUILDS ============ -->
+  <section id="builds">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Свежие постройки</h2>
+          <p>Каждая модель — с фото, разбором деталей и советом, как её улучшить.</p>
+        </div>
+      </div>
+
+      {featuredBuilds.length > 0 ? (
+        <div class="grid-3">
+          {featuredBuilds.map((build) => {
+            const palette = accentPalette[build.data.accentColor];
+            return (
+              <a class="brick-card" href={`/builds/${build.id}/`}>
+                <div class="stud-tab" style={`--tab-color:${palette.tab}`}></div>
+                <div class="brick-thumb" style={`--c1:${palette.c1}; --c2:${palette.c2};`}>
+                  {build.data.image && (
+                    <img src={build.data.image} alt={build.data.imageAlt || build.data.title} />
+                  )}
+                  {build.data.pieceCount && (
+                    <span class="piece-count">{build.data.pieceCount} деталей</span>
+                  )}
+                </div>
+                <div class="brick-body">
+                  <h3>{build.data.title}</h3>
+                  {build.data.excerpt && <p>{build.data.excerpt}</p>}
+                  <div class="meta-row">
+                    {build.data.timeMinutes && <span>⏱ {build.data.timeMinutes} мин</span>}
+                    <span>⭐ {build.data.difficulty}</span>
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      ) : (
+        <p class="empty-state">Постройки пока не добавлены — самое время создать первую в /admin!</p>
+      )}
+    </div>
+  </section>
+
+  <div class="stud-row" role="presentation"></div>
+
+  <!-- ============ VIDEO GALLERY ============ -->
+  <section id="videos">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Видео с канала</h2>
+          <p>Смотрим шаг за шагом, как рождаются постройки — от идеи до готовой модели.</p>
+        </div>
+      </div>
+
+      {featuredVideos.length > 0 ? (
+        <div class="video-grid">
+          {featuredVideos.map((video) => {
+            const palette = accentPalette[video.data.accentColor];
+            const thumb = video.data.thumbnail || getYouTubeThumbnail(video.data.youtubeUrl);
+            return (
+              <a class="video-card" href={`/videos/${video.id}/`}>
+                <div class="video-thumb" style={`--c1:${palette.c1}; --c2:${palette.c2};`}>
+                  {thumb && <img src={thumb} alt={video.data.title} />}
+                  <div class="mini-play"><svg viewBox="0 0 24 24" fill={palette.c2}><path d="M8 5v14l11-7z"/></svg></div>
+                  {video.data.duration && <span class="duration">{video.data.duration}</span>}
+                </div>
+                <div class="video-card-body">
+                  <h4>{video.data.title}</h4>
+                  {video.data.views && <span>{video.data.views}</span>}
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      ) : (
+        <p class="empty-state">Видео пока не добавлены — самое время добавить первое в /admin!</p>
+      )}
+    </div>
+  </section>
+
+  <div class="stud-row mix" role="presentation"></div>
+
+  <!-- ============ PHOTO GALLERY ============ -->
+  <section id="gallery">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Фотогалерея построек</h2>
+          <p>Крупные планы деталей, чтобы разглядеть, как всё собрано.</p>
+        </div>
+      </div>
+
+      {galleryItems.length > 0 ? (
+        <div class="masonry">
+          {galleryItems.map((item) => (
+            <div class="g-item">
+              <img src={item.data.image} alt={item.data.tag} />
+              <span class="tag">{item.data.tag}</span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p class="empty-state">Фото пока не загружены — добавь первые в /admin!</p>
+      )}
+    </div>
+  </section>
+
+  <!-- ============ PARENTS SECTION ============ -->
+  <section id="parents">
+    <div class="wrap">
+      <div class="parents">
+        <div>
+          <div class="parents-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#4FB477" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Для родителей
+          </div>
+          <h2>Безопасно, полезно и правда интересно детям</h2>
+          <ul class="check-list">
+            <li>
+              <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#4FB477" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div>
+                <b>Никакой рекламы внутри видео</b>
+                <p>Только постройки, идеи и разбор деталей — без встроенной рекламы игрушек.</p>
+              </div>
+            </li>
+            <li>
+              <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#4FB477" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div>
+                <b>Развивает мелкую моторику и логику</b>
+                <p>Каждая модель — маленькая инженерная задача, которую ребёнок решает сам.</p>
+              </div>
+            </li>
+            <li>
+              <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#4FB477" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div>
+                <b>Подходит для 6–12 лет</b>
+                <p>Инструкции написаны простым языком, крупные фото каждого шага.</p>
+              </div>
+            </li>
+          </ul>
+          <a href="/o-mne/" class="btn btn-primary">Узнать больше о проекте</a>
+        </div>
+        <div class="parents-visual">
+          <div class="stud-row multi" style="top:20px;"></div>
+          <div class="stud-row multi" style="bottom:20px;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA STRIP ============ -->
+  <section id="subscribe">
+    <div class="wrap">
+      <div class="cta-strip">
+        <div>
+          <h2>Не пропусти новую постройку</h2>
+          <p>Одно письмо в неделю: новое видео и фото-инструкция в придачу.</p>
+        </div>
+        <!--
+          Форма пока декоративная (без обработчика на бэкенде).
+          Чтобы подписка реально работала, нужно подключить сервис
+          рассылок (например, Mailchimp/Sendpulse) — можно добавить
+          позже отдельно.
+        -->
+        <form class="cta-form" onsubmit="return false;">
+          <input type="email" placeholder="Почта мамы или папы" aria-label="Email" required>
+          <button type="submit" class="btn btn-primary">Подписаться</button>
+        </form>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
