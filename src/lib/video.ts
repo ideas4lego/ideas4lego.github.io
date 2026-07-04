@@ -68,3 +68,17 @@ export function getVideoEmbedUrl(url: string): string | null {
 export function getVideoThumbnail(url: string): string | null {
   return getVideoInfo(url)?.thumbnail ?? null;
 }
+
+// Собираем "08:12" из отдельных чисел минут и секунд.
+// Числа используются вместо текстового поля специально: если хранить
+// длительность строкой вида "08:12", некоторые YAML-парсеры путают
+// её с числом в формате "часы:минуты" и ломают сборку сайта.
+export function formatDuration(
+  minutes?: number,
+  seconds?: number
+): string | null {
+  if (minutes === undefined && seconds === undefined) return null;
+  const m = minutes ?? 0;
+  const s = seconds ?? 0;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}

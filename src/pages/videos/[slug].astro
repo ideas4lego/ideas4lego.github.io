@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
-import { getVideoEmbedUrl } from '../../lib/video';
+import { getVideoEmbedUrl, formatDuration } from '../../lib/video';
 
 export async function getStaticPaths() {
   const videos = await getCollection('videos', ({ data }) => !data.draft);
@@ -14,6 +14,7 @@ export async function getStaticPaths() {
 const { video } = Astro.props;
 const { Content } = await render(video);
 const embedUrl = getVideoEmbedUrl(video.data.youtubeUrl);
+const duration = formatDuration(video.data.durationMinutes, video.data.durationSeconds);
 ---
 <BaseLayout title={video.data.title}>
   <section>
@@ -40,7 +41,7 @@ const embedUrl = getVideoEmbedUrl(video.data.youtubeUrl);
 
       <h1>{video.data.title}</h1>
       <div class="meta-row" style="margin-bottom:24px;">
-        {video.data.duration && <span>⏱ {video.data.duration}</span>}
+        {duration && <span>⏱ {duration}</span>}
         {video.data.views && <span>{video.data.views}</span>}
         <span>{video.data.date.toLocaleDateString('ru-RU')}</span>
       </div>
