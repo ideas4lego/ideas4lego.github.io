@@ -2,11 +2,10 @@
 title: "Замок дракона за час"
 date: 2026-07-02
 youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-durationMinutes: 8
-durationSeconds: 12
+duration: "08:12"
 views: "24 тыс. просмотров"
 excerpt: "Собираем замок дракона от идеи до готовой модели за один присест."
-accentColor: sun
+accentColor: "sun"
 draft: false
 ---
 

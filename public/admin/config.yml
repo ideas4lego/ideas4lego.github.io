@@ -80,22 +80,7 @@ collections:
         widget: "image"
         required: false
         hint: "Если не загрузить — для YouTube превью подставится само; для RuTube лучше загрузить своё"
-      - label: "Длительность — минуты"
-        name: "durationMinutes"
-        widget: "number"
-        value_type: "int"
-        required: false
-        default: 0
-        hint: "Например для видео 8:12 сюда впиши 8"
-      - label: "Длительность — секунды"
-        name: "durationSeconds"
-        widget: "number"
-        value_type: "int"
-        min: 0
-        max: 59
-        required: false
-        default: 0
-        hint: "Например для видео 8:12 сюда впиши 12"
+      - { label: "Длительность", name: "duration", widget: "string", required: false, hint: "Например 08:12" }
       - { label: "Просмотры (текстом)", name: "views", widget: "string", required: false, hint: "Например «24 тыс. просмотров»" }
       - { label: "Краткое описание (для карточки)", name: "excerpt", widget: "text", required: false }
       - label: "Цвет карточки"

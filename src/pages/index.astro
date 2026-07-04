@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { accentPalette } from '../lib/accentColors';
-import { getVideoThumbnail, formatDuration } from '../lib/video';
+import { getVideoThumbnail } from '../lib/video';
 
 const allBuilds = (await getCollection('builds', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -49,9 +49,7 @@ const galleryItems = (await getCollection('gallery'))
             </div>
             <div class="video-caption">
               <span>Новое видео: {latestVideo.data.title}</span>
-              {formatDuration(latestVideo.data.durationMinutes, latestVideo.data.durationSeconds) && (
-                <span class="badge">{formatDuration(latestVideo.data.durationMinutes, latestVideo.data.durationSeconds)}</span>
-              )}
+              {latestVideo.data.duration && <span class="badge">{latestVideo.data.duration}</span>}
             </div>
           </a>
         ) : (
@@ -132,13 +130,12 @@ const galleryItems = (await getCollection('gallery'))
           {featuredVideos.map((video) => {
             const palette = accentPalette[video.data.accentColor];
             const thumb = video.data.thumbnail || getVideoThumbnail(video.data.youtubeUrl);
-            const duration = formatDuration(video.data.durationMinutes, video.data.durationSeconds);
             return (
               <a class="video-card" href={`/videos/${video.id}/`}>
                 <div class="video-thumb" style={`--c1:${palette.c1}; --c2:${palette.c2};`}>
                   {thumb && <img src={thumb} alt={video.data.title} />}
                   <div class="mini-play"><svg viewBox="0 0 24 24" fill={palette.c2}><path d="M8 5v14l11-7z"/></svg></div>
-                  {duration && <span class="duration">{duration}</span>}
+                  {video.data.duration && <span class="duration">{video.data.duration}</span>}
                 </div>
                 <div class="video-card-body">
                   <h4>{video.data.title}</h4>
