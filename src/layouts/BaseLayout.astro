@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { getCollection } from 'astro:content';
 
 interface Props {
   title: string;
@@ -8,6 +9,9 @@ interface Props {
 
 const { title, description = 'Мой сайт' } = Astro.props;
 const siteName = 'Ideas4Lego';
+
+const navPages = (await getCollection('pages', ({ data }) => data.showInMenu))
+  .sort((a, b) => a.data.menuOrder - b.data.menuOrder);
 ---
 <!doctype html>
 <html lang="ru">
@@ -24,7 +28,9 @@ const siteName = 'Ideas4Lego';
         <nav>
           <a class="site-title" href="/">{siteName}</a>
           <a href="/">Главная</a>
-          <a href="/o-mne/">Обо мне</a>
+          {navPages.map((page) => (
+            <a href={`/${page.id}/`}>{page.data.title}</a>
+          ))}
         </nav>
       </div>
     </header>

@@ -2,12 +2,11 @@ backend:
   name: github
   repo: ideas4lego/ideas4lego.github.io
   branch: main
-  # Адрес твоего OAuth-прокси (см. README -> "Настройка входа").
-  # Пока не настроено — вход работать не будет.
   base_url: https://ideas4lego-cms-oauth.ideas4lego.workers.dev
   auth_endpoint: auth
 
-# Транслитерация кириллицы в имена файлов (slug)
+# Транслитерация кириллицы в имена файлов (slug), чтобы заголовки на
+# русском не создавали файлы с русскими именами.
 slug:
   encoding: "ascii"
   clean_accents: true
@@ -29,7 +28,7 @@ collections:
     folder: "src/content/posts"
     create: true
     delete: true
-    slug: "{{slug}}-{{year}}-{{month}}-{{day}}"
+    slug: "{{slug}}"
     identifier_field: title
     summary: "{{title}} — {{date}}"
     sortable_fields: ["date", "title"]
@@ -39,6 +38,11 @@ collections:
       - { label: "Картинка", name: "image", widget: "image", required: false }
       - { label: "Описание картинки", name: "imageAlt", widget: "string", required: false }
       - { label: "Краткое описание", name: "excerpt", widget: "text", required: false }
+      - label: "Видео (ссылка на YouTube)"
+        name: "video"
+        widget: "string"
+        required: false
+        hint: "Вставь ссылку на YouTube-видео, например https://www.youtube.com/watch?v=XXXXXXXXXXX"
       - { label: "Текст поста", name: "body", widget: "markdown" }
       - { label: "Черновик (не публиковать)", name: "draft", widget: "boolean", default: false }
 
@@ -46,10 +50,21 @@ collections:
     label: "Страницы"
     label_singular: "Страница"
     folder: "src/content/pages"
-    create: false
-    delete: false
+    create: true
+    delete: true
     slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}}"
     fields:
       - { label: "Заголовок", name: "title", widget: "string" }
       - { label: "Картинка", name: "image", widget: "image", required: false }
+      - label: "Показывать в меню сайта"
+        name: "showInMenu"
+        widget: "boolean"
+        default: true
+      - label: "Порядок в меню (меньше число — левее)"
+        name: "menuOrder"
+        widget: "number"
+        default: 0
+        required: false
       - { label: "Текст", name: "body", widget: "markdown" }

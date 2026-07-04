@@ -11,6 +11,7 @@ const posts = defineCollection({
     image: z.string().optional(),
     imageAlt: z.string().optional(),
     excerpt: z.string().optional(),
+    video: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });
@@ -21,6 +22,8 @@ const pages = defineCollection({
   schema: z.object({
     title: z.string(),
     image: z.string().optional(),
+    showInMenu: z.boolean().default(true),
+    menuOrder: z.number().default(0),
   }),
 });
 
