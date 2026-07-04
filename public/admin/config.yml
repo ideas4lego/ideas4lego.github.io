@@ -37,7 +37,6 @@ collections:
       - { label: "Заголовок", name: "title", widget: "string" }
       - { label: "Дата", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
       - { label: "Картинка", name: "image", widget: "image", required: false }
-      - { label: "Видео", name: "video", widget: "video", required: false }
       - { label: "Описание картинки", name: "imageAlt", widget: "string", required: false }
       - { label: "Краткое описание", name: "excerpt", widget: "text", required: false }
       - { label: "Текст поста", name: "body", widget: "markdown" }
