@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { accentPalette } from '../lib/accentColors';
-import { getVideoThumbnail, formatDuration } from '../lib/video';
+import { getVideoThumbnail, getVideoEmbedUrl, formatDuration } from '../lib/video';
 
 const allBuilds = (await getCollection('builds', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -12,6 +12,7 @@ const allVideos = (await getCollection('videos', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const featuredVideos = allVideos.slice(0, 3);
 const latestVideo = allVideos[0];
+const latestVideoEmbedUrl = latestVideo ? getVideoEmbedUrl(latestVideo.data.youtubeUrl) : null;
 
 const galleryItems = (await getCollection('gallery'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -41,23 +42,29 @@ const galleryItems = (await getCollection('gallery'))
 
       <div class="video-frame">
         {latestVideo ? (
-          <a href={`/videos/${latestVideo.id}/`} style="text-decoration:none; color:inherit;">
-            <div class="video-inner">
-              <button class="play-btn" aria-label="Смотреть видео">
+          <>
+            <div
+              class="video-inner"
+              data-embed={latestVideoEmbedUrl}
+              style={latestVideoEmbedUrl ? 'cursor:pointer;' : ''}
+            >
+              <button class="play-btn" aria-label="Смотреть видео" type="button">
                 <svg viewBox="0 0 24 24" fill="#E13438"><path d="M8 5v14l11-7z"/></svg>
               </button>
             </div>
             <div class="video-caption">
-              <span>Новое видео: {latestVideo.data.title}</span>
+              <a href={`/videos/${latestVideo.id}/`} style="text-decoration:none; color:inherit;">
+                <span>Новое видео: {latestVideo.data.title}</span>
+              </a>
               {formatDuration(latestVideo.data.durationMinutes, latestVideo.data.durationSeconds) && (
                 <span class="badge">{formatDuration(latestVideo.data.durationMinutes, latestVideo.data.durationSeconds)}</span>
               )}
             </div>
-          </a>
+          </>
         ) : (
           <div>
             <div class="video-inner">
-              <button class="play-btn" aria-label="Скоро будет видео">
+              <button class="play-btn" aria-label="Скоро будет видео" type="button">
                 <svg viewBox="0 0 24 24" fill="#E13438"><path d="M8 5v14l11-7z"/></svg>
               </button>
             </div>
@@ -133,18 +140,25 @@ const galleryItems = (await getCollection('gallery'))
             const palette = accentPalette[video.data.accentColor];
             const thumb = video.data.thumbnail || getVideoThumbnail(video.data.youtubeUrl);
             const duration = formatDuration(video.data.durationMinutes, video.data.durationSeconds);
+            const embedUrl = getVideoEmbedUrl(video.data.youtubeUrl);
             return (
-              <a class="video-card" href={`/videos/${video.id}/`}>
-                <div class="video-thumb" style={`--c1:${palette.c1}; --c2:${palette.c2};`}>
+              <div class="video-card">
+                <div
+                  class="video-thumb"
+                  style={`--c1:${palette.c1}; --c2:${palette.c2}; ${embedUrl ? 'cursor:pointer;' : ''}`}
+                  data-embed={embedUrl}
+                >
                   {thumb && <img src={thumb} alt={video.data.title} />}
                   <div class="mini-play"><svg viewBox="0 0 24 24" fill={palette.c2}><path d="M8 5v14l11-7z"/></svg></div>
                   {duration && <span class="duration">{duration}</span>}
                 </div>
                 <div class="video-card-body">
-                  <h4>{video.data.title}</h4>
+                  <a href={`/videos/${video.id}/`} style="text-decoration:none; color:inherit;">
+                    <h4>{video.data.title}</h4>
+                  </a>
                   {video.data.views && <span>{video.data.views}</span>}
                 </div>
-              </a>
+              </div>
             );
           })}
         </div>
@@ -245,4 +259,43 @@ const galleryItems = (await getCollection('gallery'))
       </div>
     </div>
   </section>
+
+  <!--
+    Инлайн-воспроизведение видео: по клику на превью (в hero-блоке и
+    в карточках раздела "Видео") превью заменяется на настоящий
+    плеер (YouTube или RuTube — это уже видно по ссылке из /admin),
+    без перехода на отдельную страницу. Заголовок карточки при этом
+    остаётся обычной ссылкой на страницу видео.
+  -->
+  <script>
+    function playInline(container: HTMLElement) {
+      const embedUrl = container.dataset.embed;
+      if (!embedUrl) return;
+
+      const separator = embedUrl.includes('?') ? '&' : '?';
+      const iframe = document.createElement('iframe');
+      iframe.src = `${embedUrl}${separator}autoplay=1`;
+      iframe.setAttribute(
+        'allow',
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+      );
+      iframe.setAttribute('allowfullscreen', 'true');
+      iframe.style.position = 'absolute';
+      iframe.style.inset = '0';
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.border = '0';
+
+      container.innerHTML = '';
+      container.style.cursor = 'default';
+      container.appendChild(iframe);
+    }
+
+    document
+      .querySelectorAll<HTMLElement>('.video-inner[data-embed], .video-thumb[data-embed]')
+      .forEach((container) => {
+        if (!container.dataset.embed) return;
+        container.addEventListener('click', () => playInline(container));
+      });
+  </script>
 </BaseLayout>
