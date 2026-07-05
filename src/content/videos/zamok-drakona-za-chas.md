@@ -1,13 +1,13 @@
 ---
-title: "Замок дракона за час"
-date: 2026-07-02
-youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+excerpt: Собираем замок дракона от идеи до готовой модели за один присест.
+draft: false
 durationMinutes: 8
 durationSeconds: 12
-views: "24 тыс. просмотров"
-excerpt: "Собираем замок дракона от идеи до готовой модели за один присест."
+title: Замок дракона за час
+date: 2026-07-02
+youtubeUrl: https://rutube.ru/video/9be33818a888fb12714c7167ff169a68/
+views: 24 тыс. просмотров
 accentColor: sun
-draft: false
 ---
 
 Это пример видео-записи. Отредактируй или удали через **/admin** →
